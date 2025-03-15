@@ -1,36 +1,49 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-const vscode = require('vscode');
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+const vscode = require("vscode");
+const { registerCommands } = require('./src/commands/registerCommands');
+const { initRunning } = require('./src/services/initRunning');
+const { registerWorkSpace } = require('./src/workspace/registerWorkSpace');
 
 /**
  * @param {vscode.ExtensionContext} context
  */
-function activate(context) {
-
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "drupal-support" is now active!');
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with  registerCommand
-  // The commandId parameter must match the command field in package.json
-  const disposable = vscode.commands.registerCommand('drupal-support.helloWorld', function () {
-    // The code you place here will be executed every time your command is executed
-
-    // Display a message box to the user
-    vscode.window.showInformationMessage('Hello World from Drupal Support!');
-  });
-
-  context.subscriptions.push(disposable);
+function init(context) {
+  const wsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+  context.workspaceState.update('wsPath', wsPath);
 }
 
-// This method is called when your extension is deactivated
-function deactivate() { }
+/**
+ * Checks if the current workspace contains a Drupal installation
+ * @returns {Promise<boolean>}
+ */
+async function isDrupalWorkspace() {
+  if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
+    return false;
+  }
 
+  try {
+    // Use VS Code's file search to find Drupal.php
+    const files = await vscode.workspace.findFiles('**/core/lib/Drupal.php', '**/node_modules/**');
+    return files.length > 0;
+  } catch (error) {
+    console.error('Error checking for Drupal workspace:', error);
+    return false;
+  }
+}
+
+/**
+ * @param {vscode.ExtensionContext} context
+ */
+async function activate(context) {
+  // Only activate if this is a Drupal workspace
+  if (!await isDrupalWorkspace()) {
+    return;
+  }
+
+  init(context);
+  registerCommands(context);
+  initRunning(context);
+  registerWorkSpace(context);
+}
 module.exports = {
   activate,
-  deactivate
 }
