@@ -1,9 +1,8 @@
 # Change Log
 
-All notable changes to the "drupal-support" extension will be documented in this file.
+## [1.0.0] - 2025-16-03
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Added
 
-## [Unreleased]
-
-- Initial release
+- Create the extension.
+- Add the initial version.
