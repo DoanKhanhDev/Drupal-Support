@@ -1,15 +1,89 @@
 const assert = require('assert');
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 const vscode = require('vscode');
-// const myExtension = require('../extension');
+const sinon = require('sinon');
+const myExtension = require('../extension');
 
-suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
+suite('Drupal Support Extension Test Suite', () => {
+  vscode.window.showInformationMessage('Starting Drupal Support extension tests.');
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-	});
+  let sandbox;
+
+  setup(() => {
+    sandbox = sinon.createSandbox();
+  });
+
+  teardown(() => {
+    sandbox.restore();
+  });
+
+  test('Extension should activate only in Drupal workspace', async () => {
+    // Mock findFiles to simulate a Drupal workspace
+    const findFilesStub = sandbox.stub(vscode.workspace, 'findFiles');
+
+    // Test when Drupal.php is found
+    findFilesStub.resolves([{ fsPath: '/path/to/core/lib/Drupal.php' }]);
+    const context = { workspaceState: { update: sandbox.stub() } };
+
+    // Mock workspace folders
+    sandbox.stub(vscode.workspace, 'workspaceFolders').value([
+      { uri: { fsPath: '/test/workspace' } }
+    ]);
+
+    // Mock the command registration and other functions
+    const registerCommandsStub = sandbox.stub();
+    const initRunningStub = sandbox.stub();
+    const registerWorkSpaceStub = sandbox.stub();
+
+    // Replace the require calls with our stubs
+    const proxyquire = require('proxyquire').noCallThru();
+    const extensionWithStubs = proxyquire('../extension', {
+      './src/commands/registerCommands': { registerCommands: registerCommandsStub },
+      './src/services/initRunning': { initRunning: initRunningStub },
+      './src/workspace/registerWorkSpace': { registerWorkSpace: registerWorkSpaceStub }
+    });
+
+    await extensionWithStubs.activate(context);
+
+    assert.strictEqual(context.workspaceState.update.calledOnce, true);
+    assert.strictEqual(registerCommandsStub.calledOnce, true);
+    assert.strictEqual(initRunningStub.calledOnce, true);
+    assert.strictEqual(registerWorkSpaceStub.calledOnce, true);
+
+    // Test when Drupal.php is not found
+    findFilesStub.resolves([]);
+    await extensionWithStubs.activate(context);
+
+    // The functions should not be called again
+    assert.strictEqual(context.workspaceState.update.calledOnce, true);
+    assert.strictEqual(registerCommandsStub.calledOnce, true);
+    assert.strictEqual(initRunningStub.calledOnce, true);
+    assert.strictEqual(registerWorkSpaceStub.calledOnce, true);
+  });
+
+  test('isDrupalWorkspace should return false when no workspace folders', async () => {
+    // Mock workspace folders to be empty
+    sandbox.stub(vscode.workspace, 'workspaceFolders').value(null);
+
+    const result = await myExtension.activate({
+      workspaceState: { update: () => Promise.resolve() }
+    });
+
+    assert.strictEqual(result, undefined);
+  });
+
+  test('isDrupalWorkspace should handle errors gracefully', async () => {
+    // Mock workspace folders
+    sandbox.stub(vscode.workspace, 'workspaceFolders').value([
+      { uri: { fsPath: '/test/workspace' } }
+    ]);
+
+    // Mock findFiles to throw an error
+    sandbox.stub(vscode.workspace, 'findFiles').rejects(new Error('Test error'));
+
+    const result = await myExtension.activate({
+      workspaceState: { update: () => Promise.resolve() }
+    });
+
+    assert.strictEqual(result, undefined);
+  });
 });
