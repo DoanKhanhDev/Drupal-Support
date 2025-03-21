@@ -29,7 +29,7 @@ const processServiceFile = (fileContent, filePath) => {
 async function scan(progress, token, context) {
   const files = await vscode.workspace.findFiles(
     '**/*.services.yml',
-    '{**/node_modules,**/vendor}'
+    '**/{vendor,node_modules,test,tests,.git,.idea,.vscode}/**',
   );
 
   progress.report({ message: `Found ${files.length} services files` });
@@ -46,7 +46,6 @@ async function scan(progress, token, context) {
       message: `Processing (${i + 1}/${files.length})`,
     });
   }
-
 
   const sortedServices = [...allServices].sort((a, b) => {
     if (typeof a.label === 'string' && typeof b.label === 'string') {
