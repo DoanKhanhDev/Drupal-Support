@@ -22,7 +22,10 @@ async function isDrupalWorkspace() {
 
   try {
     // Use VS Code's file search to find Drupal.php
-    const files = await vscode.workspace.findFiles('**/core/lib/Drupal.php', '**/node_modules/**');
+    const files = await vscode.workspace.findFiles(
+      '**/core/lib/Drupal.php',
+      '{**/node_modules,**/vendor}'
+    );
     return files.length > 0;
   } catch (error) {
     console.error('Error checking for Drupal workspace:', error);
@@ -41,6 +44,7 @@ async function activate(context) {
 
   init(context);
   registerCommands(context);
+
   initRunning(context);
   registerWorkSpace(context);
 }
