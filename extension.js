@@ -2,6 +2,7 @@ const vscode = require("vscode");
 const { registerCommands } = require('./src/commands/registerCommands');
 const { initRunning } = require('./src/services/initRunning');
 const { registerWorkSpace } = require('./src/workspace/registerWorkSpace');
+const { registerCompletion } = require('./src/completion/registerCompletion');
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -22,7 +23,10 @@ async function isDrupalWorkspace() {
 
   try {
     // Use VS Code's file search to find Drupal.php
-    const files = await vscode.workspace.findFiles('**/core/lib/Drupal.php', '**/node_modules/**');
+    const files = await vscode.workspace.findFiles(
+      '**/core/lib/Drupal.php',
+      '**/{vendor,node_modules,test,tests,.git,.idea,.vscode}/**',
+    );
     return files.length > 0;
   } catch (error) {
     console.error('Error checking for Drupal workspace:', error);
@@ -41,6 +45,7 @@ async function activate(context) {
 
   init(context);
   registerCommands(context);
+  registerCompletion(context);
   initRunning(context);
   registerWorkSpace(context);
 }
