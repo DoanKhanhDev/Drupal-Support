@@ -1,12 +1,14 @@
 # Drupal Support for VS Code
 
-A Visual Studio Code extension that enhances your Drupal development experience with specialized tools and features.
+A Visual Studio Code extension that enhances your Drupal development experience with specialized tools and features tailored for Drupal projects.
 
 ## Features
 
 - **Automatic Drupal Detection**: The extension automatically detects Drupal installations in your workspace
 - **Drupal-specific Commands**: Access Drupal-specific commands directly from VS Code
 - **Workspace Integration**: Seamless integration with your Drupal workspace
+- **Syntax Highlighting**: Enhanced syntax highlighting for Drupal-specific files
+- **Code Snippets**: Useful snippets for common Drupal patterns and structures
 
 ## Requirements
 
