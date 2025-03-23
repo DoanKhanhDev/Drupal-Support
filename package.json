@@ -40,12 +40,21 @@
         "icon": "$(refresh)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "drupal-support-views",
+          "title": "Drupal Support",
+          "icon": "./images/drupal_icon.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "drupal-support-views": [
         {
           "type": "webview",
           "id": "drupal-support.serviceWebview",
-          "name": "Drupal Services"
+          "name": "Services"
         }
       ]
     },
