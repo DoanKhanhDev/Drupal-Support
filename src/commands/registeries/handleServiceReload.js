@@ -27,7 +27,7 @@ async function handleServiceReload(context) {
     }, 3000);
 
   } catch (error) {
-    vscode.window.showErrorMessage(`Failed to reload services: ${error.message}`);
+    vscode.window.showErrorMessage(`Failed to reload services`);
   }
 }
 
