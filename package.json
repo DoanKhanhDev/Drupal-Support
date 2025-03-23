@@ -3,7 +3,7 @@
   "displayName": "Drupal Support",
   "description": "Support development for Drupal",
   "icon": "images/icon.png",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": {
     "name": "DoanKhanh.Dev",
     "email": "doankhanh.dev@gmail.com"
@@ -40,12 +40,21 @@
         "icon": "$(refresh)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "drupal-support-views",
+          "title": "Drupal Support",
+          "icon": "./images/drupal_icon.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "drupal-support-views": [
         {
           "type": "webview",
           "id": "drupal-support.serviceWebview",
-          "name": "Drupal Services"
+          "name": "Services"
         }
       ]
     },
