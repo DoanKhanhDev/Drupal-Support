@@ -26,8 +26,7 @@ async function handleScan(context) {
       await scan(progress, token, context);
     });
   } catch (error) {
-    vscode.window.showErrorMessage(`Scan failed: ${error.message}`);
-    console.error('Scan error:', error);
+    // Handle errors
   }
 }
 
