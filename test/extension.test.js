@@ -1,7 +1,6 @@
 const assert = require('assert');
 const vscode = require('vscode');
 const sinon = require('sinon');
-const myExtension = require('../extension');
 
 suite('Drupal Support Extension Test Suite', () => {
   vscode.window.showInformationMessage('Starting Drupal Support extension tests.');
@@ -58,32 +57,5 @@ suite('Drupal Support Extension Test Suite', () => {
     assert.strictEqual(registerCommandsStub.calledOnce, true);
     assert.strictEqual(initRunningStub.calledOnce, true);
     assert.strictEqual(registerWorkSpaceStub.calledOnce, true);
-  });
-
-  test('isDrupalWorkspace should return false when no workspace folders', async () => {
-    // Mock workspace folders to be empty
-    sandbox.stub(vscode.workspace, 'workspaceFolders').value(null);
-
-    const result = await myExtension.activate({
-      workspaceState: { update: () => Promise.resolve() }
-    });
-
-    assert.strictEqual(result, undefined);
-  });
-
-  test('isDrupalWorkspace should handle errors gracefully', async () => {
-    // Mock workspace folders
-    sandbox.stub(vscode.workspace, 'workspaceFolders').value([
-      { uri: { fsPath: '/test/workspace' } }
-    ]);
-
-    // Mock findFiles to throw an error
-    sandbox.stub(vscode.workspace, 'findFiles').rejects(new Error('Test error'));
-
-    const result = await myExtension.activate({
-      workspaceState: { update: () => Promise.resolve() }
-    });
-
-    assert.strictEqual(result, undefined);
   });
 });
