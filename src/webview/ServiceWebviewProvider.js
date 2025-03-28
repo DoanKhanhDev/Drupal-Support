@@ -76,7 +76,7 @@ class ServiceWebviewProvider {
     const moduleServices = this.filterModuleServices(services);
 
     return `
-      ${services.length === 0 ? '<div class="no-results">No services found</div>' : ''}
+      ${services.length === 0 ? '<div class="no-results">No services found or this isn\'t Drupal Workspace</div>' : ''}
       ${this.renderSectionHtml('core', 'Core Services', coreServices)}
       ${this.renderSectionHtml('modules', 'Module Services', moduleServices)}
     `;
