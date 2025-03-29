@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.2.3] - 2025-29-03
+
+- Fix missing image in `README.md`.
+
 ## [1.2.2] - 2025-29-03
 
 - Add repo to `package.json`.
