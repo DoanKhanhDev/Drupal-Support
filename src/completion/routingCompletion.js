@@ -4,29 +4,29 @@ const vscode = require('vscode');
  * Registers service completion providers for PHP and YAML files
  * @param {vscode.ExtensionContext} context - The extension context
  */
-async function serviceCompletion(context) {
-  // Get services from workspace state
-  const services = await context.workspaceState.get('services') || [];
+async function routingCompletion(context) {
+  // Get routing from workspace state
+  const routings = await context.workspaceState.get('routing') || [];
 
-  // Create completion items from services
-  const serviceCompletionItems = createServiceCompletionItems(services);
+  // Create completion items from routings
+  const routingCompletionItems = createRoutingCompletionItems(routings);
 
   // Register completion providers
-  registerPhpCompletionProvider(context, serviceCompletionItems);
-  registerYamlCompletionProvider(context, serviceCompletionItems);
+  registerPhpCompletionProvider(context, routingCompletionItems);
+  registerTwigCompletionProvider(context, routingCompletionItems);
 }
 
 /**
  * Creates completion items from service data
- * @param {Array} services - Array of service objects
+ * @param {Array} routings - Array of service objects
  * @returns {Array} - Array of completion items
  */
-function createServiceCompletionItems(services) {
-  return services.map(service => ({
-    label: service.label,
-    detail: service.class,
-    insertText: service.serviceId,
-    filterText: service.serviceId,
+function createRoutingCompletionItems(routings) {
+  return routings.map(routing => ({
+    label: routing.routingId,
+    detail: routing.path ? routing.path : '',
+    insertText: routing.routingId,
+    filterText: routing.routingId,
     kind: vscode.CompletionItemKind.Class,
   }));
 }
@@ -38,9 +38,7 @@ function createServiceCompletionItems(services) {
  */
 function registerPhpCompletionProvider(context, completionItems) {
   const phpPrefixes = [
-    'Drupal::service(',
-    '$container->get(',
-    '$container->getDefinition(',
+    'fromRoute(',
   ];
 
   const phpCompletionProvider = vscode.languages.registerCompletionItemProvider(
@@ -54,7 +52,7 @@ function registerPhpCompletionProvider(context, completionItems) {
           .lineAt(position)
           .text.substring(0, position.character);
 
-        if (!phpPrefixes.some((prefix) => linePrefix.includes(prefix) && (linePrefix.endsWith("('") || linePrefix.endsWith('("')) )) {
+        if (!phpPrefixes.some((prefix) => linePrefix.includes(prefix) && (linePrefix.endsWith("('") || linePrefix.endsWith('("')))) {
           return [];
         }
 
@@ -68,17 +66,21 @@ function registerPhpCompletionProvider(context, completionItems) {
   context.subscriptions.push(phpCompletionProvider);
 }
 
+
 /**
  * Registers YAML completion provider
  * @param {vscode.ExtensionContext} context - The extension context
  * @param {Array} completionItems - Array of completion items
  */
-function registerYamlCompletionProvider(context, completionItems) {
+function registerTwigCompletionProvider(context, completionItems) {
+  const twigPrefixes = [
+    'path(',
+  ];
   const yamlCompletionProvider = vscode.languages.registerCompletionItemProvider(
     {
-      language: 'yaml',
+      language: 'twig',
       scheme: 'file',
-      pattern: '**/*.services.yml',
+      pattern: '**/*.html.twig',
     },
     {
       provideCompletionItems(document, position) {
@@ -86,19 +88,21 @@ function registerYamlCompletionProvider(context, completionItems) {
           .lineAt(position)
           .text.substring(0, position.character);
 
-        if (!linePrefix.includes('@')) {
+        if (!twigPrefixes.some((prefix) => linePrefix.includes(prefix) && (linePrefix.endsWith("('") || linePrefix.endsWith('("')))) {
           return [];
         }
 
         return completionItems;
       },
     },
-    '@'
+    '"',
+    "'"
   );
 
   context.subscriptions.push(yamlCompletionProvider);
 }
 
+
 module.exports = {
-  serviceCompletion
+  routingCompletion
 }
