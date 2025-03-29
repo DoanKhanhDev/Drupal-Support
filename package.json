@@ -12,6 +12,11 @@
   "engines": {
     "vscode": "^1.75.0"
   },
+  "homepage": "https://github.com/DoanKhanhDev/Drupal-Support",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DoanKhanhDev/Drupal-Support.git"
+  },
   "categories": [
     "Other"
   ],
