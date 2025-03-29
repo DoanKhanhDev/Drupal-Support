@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.2.1] - 2025-29-03
+
+- Add detect routing file
+- Remove detect this is Drupal workspace.
+
 ## [1.1.1] - 2025-23-03
 
 - Add icon to Webview.
@@ -9,7 +14,6 @@
 
 - Add service completion.
 - Update performance.
-
 
 ## [1.0.0] - 2025-16-03
 
