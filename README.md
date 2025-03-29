@@ -43,3 +43,9 @@ Please report any issues on the [GitHub repository](https://github.com/DoanKhanh
 ## Release Notes
 
 Detailed Release Notes are available [here](https://github.com/DoanKhanhDev/Drupal-Support/blob/master/CHANGELOG.md).
+
+## Buy Me A Coffee
+
+You can support my work by buying me a coffee!
+
+[![Buy Me A Coffee](/images/orange_img.webp)](https://buymeacoffee.com/doankhanh.dev)
