@@ -48,4 +48,4 @@ Detailed Release Notes are available [here](https://github.com/DoanKhanhDev/Drup
 
 You can support my work by buying me a coffee!
 
-[![Buy Me A Coffee](./images/orange_img.webp)](https://buymeacoffee.com/doankhanh.dev)
+[![Buy Me A Coffee](./images/orange_img.png)](https://buymeacoffee.com/doankhanh.dev)
