@@ -38,6 +38,16 @@
         "command": "drupal-support.service.reload",
         "title": "Drupal Support: Sevice reload",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "drupal-support.routing.reload",
+        "title": "Drupal Support: Routing reload",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "drupal-support.all.reload",
+        "title": "Drupal Support: All reload",
+        "icon": "$(refresh)"
       }
     ],
     "viewsContainers": {
@@ -45,7 +55,8 @@
         {
           "id": "drupal-support-views",
           "title": "Drupal Support",
-          "icon": "./images/drupal_icon.svg"
+          "icon": "./images/drupal_icon.svg",
+          "tooltip": "Drupal Support"
         }
       ]
     },
@@ -55,6 +66,11 @@
           "type": "webview",
           "id": "drupal-support.serviceWebview",
           "name": "Services"
+        },
+        {
+          "type": "webview",
+          "id": "drupal-support.routingWebview",
+          "name": "Routings"
         }
       ]
     },
@@ -63,6 +79,11 @@
         {
           "command": "drupal-support.service.reload",
           "when": "view == drupal-support.serviceWebview",
+          "group": "navigation"
+        },
+        {
+          "command": "drupal-support.routing.reload",
+          "when": "view == drupal-support.routingWebview",
           "group": "navigation"
         }
       ]
