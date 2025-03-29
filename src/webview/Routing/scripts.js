@@ -5,7 +5,7 @@ function getWebviewScripts() {
     document.querySelector('.search-box').addEventListener('input', (e) => {
       vscode.postMessage({
         command: 'search',
-        searchTerm: e.target.value
+        searchTerm: e.target.value.trim()
       });
     });
 
@@ -36,13 +36,13 @@ function getWebviewScripts() {
         return;
       }
 
-      // Handle service item click (open file)
-      const serviceItem = e.target.closest('.service-item');
-      if (serviceItem) {
+      // Handle routing item click (open file)
+      const routingItem = e.target.closest('.routing-item');
+      if (routingItem) {
         vscode.postMessage({
           command: 'openFile',
-          file: serviceItem.dataset.file,
-          serviceId: serviceItem.dataset.serviceId
+          file: routingItem.dataset.file,
+          routingId: routingItem.dataset.routingId
         });
       }
 
@@ -60,7 +60,7 @@ function getWebviewScripts() {
     window.addEventListener('message', event => {
       const message = event.data;
       if (message.type === 'updateList') {
-        document.getElementById('services-list').innerHTML = message.html;
+        document.getElementById('routings-list').innerHTML = message.html;
       }
     });
   `;

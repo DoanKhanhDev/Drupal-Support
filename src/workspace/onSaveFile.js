@@ -1,10 +1,10 @@
 const vscode = require('vscode');
 const yml = require('js-yaml');
-const { processServiceFile } = require('../services/scanWorkspace');
-const { refreshServiceTree, isSeviceYamlDocument } = require('../workspace/utilities');
+const { processServiceFile, processRoutingFile } = require('../services/scanWorkspace');
+const { refreshServiceTree, refreshRoutingTree, isSeviceYamlDocument, isRoutingYamlDocument } = require('../workspace/utilities');
 
 /**
- * Watches for YAML file saves and refreshes the service tree
+ * Watches for YAML file saves and refreshes the appropriate trees
  * @param {vscode.ExtensionContext} context Extension context
  */
 function onSaveFile(context) {
@@ -18,32 +18,48 @@ function onSaveFile(context) {
  * @param {vscode.TextDocument} document
  */
 function handleDocumentSave(context, document) {
-  if (!isSeviceYamlDocument(document)) {
-    return;
+  if (isSeviceYamlDocument(document)) {
+    updateStateAndRefreshTree(context, document, 'services', processServiceFile, refreshServiceTree);
+  } else if (isRoutingYamlDocument(document)) {
+    updateStateAndRefreshTree(context, document, 'routing', processRoutingFile, refreshRoutingTree);
   }
+}
 
-  // Remove the service from the serviceOriginal array if it exists.
-  const serviceOriginal = context.workspaceState.get('services') || [];
-  const serviceUpdated = serviceOriginal.filter(service => service.file !== document.uri.fsPath);
+/**
+ * Updates the state and refreshes the tree for a given document type
+ * @param {vscode.ExtensionContext} context
+ * @param {vscode.TextDocument} document
+ * @param {string} stateKey The key to use in workspaceState
+ * @param {Function} processFunction The function to process the file
+ * @param {Function} refreshFunction The function to refresh the tree
+ */
+function updateStateAndRefreshTree(context, document, stateKey, processFunction, refreshFunction) {
+  // Get the original items and filter out the current file
+  const originalItems = context.workspaceState.get(stateKey) || [];
+  const updatedItems = originalItems.filter(item => item.file !== document.uri.fsPath);
 
-  // Load the YAML file.
+  // Load and process the YAML file
   const fileContent = yml.load(document.getText());
-  const { services } = processServiceFile(fileContent, document.uri.fsPath);
+  const processResult = processFunction(fileContent, document.uri.fsPath);
 
-  // Update the serviceOriginal array with the new services.
-  serviceUpdated.push(...services);
+  // Extract the items from the process result
+  // For services, the key is 'services', for routing, it's 'routings'
+  const newItems = processResult[stateKey === 'routing' ? 'routing' : 'services'];
 
-  // Sort the services alphabetically by label.
-  const sortedServices = [...serviceUpdated].sort((a, b) => {
+  // Add the new items to the updated list
+  updatedItems.push(...newItems);
+
+  // Sort the items alphabetically by label
+  const sortedItems = [...updatedItems].sort((a, b) => {
     if (typeof a.label === 'string' && typeof b.label === 'string') {
-      return a.label.localeCompare(b.label)
+      return a.label.localeCompare(b.label);
     }
     return 0;
   });
 
-  // Update the serviceOriginal array with the sorted services.
-  context.workspaceState.update('services', sortedServices);
-  refreshServiceTree(context);
+  // Update the state and refresh the tree
+  context.workspaceState.update(stateKey, sortedItems);
+  refreshFunction(context);
 }
 
 module.exports = {

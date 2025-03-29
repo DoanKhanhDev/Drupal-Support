@@ -47,11 +47,11 @@ class ServiceLocator {
   /**
    * Finds all occurrences of a service ID in the document
    * @param {vscode.TextDocument} document - The document to search in
-   * @param {string} serviceId - The service ID to search for
+   * @param {string} id - The service ID to search for
    * @returns {vscode.Range[]} Array of ranges where the service ID was found
    */
-  static findServiceRanges(document, serviceId) {
-    const searchString = `${serviceId}:`;
+  static findRanges(document, id) {
+    const searchString = `${id}:`;
     const text = document.getText();
     const ranges = [];
     let startIndex = 0;
@@ -73,11 +73,11 @@ const fileHighlighter = new FileHighlighter();
 /**
  * Handles opening a file and highlighting service ID occurrences
  * @param {string} filePath - Path to the file to open
- * @param {string} serviceId - Service ID to search and highlight
+ * @param {string} id - Service ID to search and highlight
  * @returns {Promise<void>}
  */
-async function handleOpenFile(filePath, serviceId) {
-  if (!filePath || !serviceId) {
+async function handleOpenFile(filePath, id) {
+  if (!filePath || !id) {
     vscode.window.showWarningMessage('File path and service ID are required');
     return;
   }
@@ -86,10 +86,10 @@ async function handleOpenFile(filePath, serviceId) {
     const document = await vscode.workspace.openTextDocument(filePath);
     const editor = await vscode.window.showTextDocument(document);
 
-    const ranges = ServiceLocator.findServiceRanges(document, serviceId);
+    const ranges = ServiceLocator.findRanges(document, id);
 
     if (ranges.length === 0) {
-      vscode.window.showInformationMessage(`No occurrences of "${serviceId}:" found`);
+      vscode.window.showInformationMessage(`No occurrences of "${id}" found`);
       return;
     }
 

@@ -9,6 +9,8 @@ A Visual Studio Code extension that enhances your Drupal development experience 
 - **Workspace Integration**: Seamless integration with your Drupal workspace
 - **Syntax Highlighting**: Enhanced syntax highlighting for Drupal-specific files
 - **Code Snippets**: Useful snippets for common Drupal patterns and structures
+- **Service Completion**: Intelligent code completion for Drupal services
+- **Routing Detection**: Automatic detection of Drupal routing files
 
 ## Requirements
 
@@ -21,10 +23,6 @@ A Visual Studio Code extension that enhances your Drupal development experience 
 2. Go to Extensions (Ctrl+Shift+X)
 3. Search for "Drupal Support"
 4. Click Install
-
-## Usage
-
-The extension automatically activates when a Drupal installation is detected in your workspace. It looks for the presence of `core/lib/Drupal.php` to identify a Drupal project.
 
 ### Available Commands
 
@@ -45,3 +43,9 @@ Please report any issues on the [GitHub repository](https://github.com/DoanKhanh
 ## Release Notes
 
 Detailed Release Notes are available [here](https://github.com/DoanKhanhDev/Drupal-Support/blob/master/CHANGELOG.md).
+
+## Buy Me A Coffee
+
+You can support my work by buying me a coffee!
+
+[![Buy Me A Coffee](/images/orange_img.webp)](https://buymeacoffee.com/doankhanh.dev)

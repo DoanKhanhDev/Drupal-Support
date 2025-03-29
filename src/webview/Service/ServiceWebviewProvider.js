@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const { getWebviewStyles } = require('./styles');
 const { getWebviewScripts } = require('./scripts');
+const { commandMachineNames } = require('../../constants');
 
 class ServiceWebviewProvider {
   constructor(context) {
@@ -29,7 +30,7 @@ class ServiceWebviewProvider {
   handleMessage(message) {
     switch (message.command) {
       case 'openFile':
-        vscode.commands.executeCommand('drupal-support.openFile', message.file, message.serviceId);
+        vscode.commands.executeCommand(commandMachineNames.openFile, message.file, message.serviceId);
         break;
       case 'refresh':
         this.refresh();
@@ -76,7 +77,7 @@ class ServiceWebviewProvider {
     const moduleServices = this.filterModuleServices(services);
 
     return `
-      ${services.length === 0 ? '<div class="no-results">No services found</div>' : ''}
+      ${services.length === 0 ? '<div class="no-results">No services found or this isn\'t Drupal Workspace</div>' : ''}
       ${this.renderSectionHtml('core', 'Core Services', coreServices)}
       ${this.renderSectionHtml('modules', 'Module Services', moduleServices)}
     `;
@@ -130,7 +131,6 @@ class ServiceWebviewProvider {
   }
 
   async refresh() {
-    await vscode.commands.executeCommand('drupal-support.scan');
     this.services = this.context.workspaceState.get('services') || [];
     this.filteredServices = this.services;
     this.updateContent();
