@@ -18,8 +18,8 @@ function init(context) {
 async function activate(context) {
   init(context);
   registerCommands(context);
-  registerCompletion(context);
   initRunning(context);
+  registerCompletion(context);
   registerWorkSpace(context);
 }
 module.exports = {
