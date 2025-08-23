@@ -1,9 +1,9 @@
-const { serviceCompletion } = require('./serviceCompletion');
-const { routingCompletion } = require('./routingCompletion');
+const serviceCompletion = require('./serviceCompletion');
+const routingCompletion = require('./routingCompletion');
 
 function registerCompletion(context) {
-  serviceCompletion(context);
-  routingCompletion(context);
+  new serviceCompletion(context).register();
+  new routingCompletion(context).register();
 }
 
 module.exports = {

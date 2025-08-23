@@ -124,8 +124,8 @@ async function scanServices(context) {
   // Process service files
   const allServices = await processFiles(
     serviceFiles,
-    processServiceFile,);
-
+    processServiceFile
+  );
   // Sort results and update workspace state
   const sortedServices = sortByLabel(allServices);
   await context.workspaceState.update('services', sortedServices);

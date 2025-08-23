@@ -11,6 +11,10 @@ const { scan } = require("../../services/scanWorkspace");
 async function handleScan(context, type = 'all') {
   try {
     await scan(context, type);
+    const statusBarMessage = vscode.window.setStatusBarMessage('Scan successfully');
+    setTimeout(() => {
+      statusBarMessage.dispose();
+    }, 3000);
   } catch (error) {
     // Handle errors
   }

@@ -10,7 +10,7 @@ function refreshServiceTree(context) {
   const ServiceWebview = context.subscriptions.find(
     (subscription) => subscription instanceof ServiceWebviewProvider
   );
-  if (ServiceWebview instanceof  ServiceWebviewProvider) {
+  if (ServiceWebview instanceof ServiceWebviewProvider) {
     ServiceWebview.refresh();
   }
 }
@@ -23,7 +23,7 @@ function refreshRoutingTree(context) {
   const RoutingWebview = context.subscriptions.find(
     (subscription) => subscription instanceof RoutingWebviewProvider
   );
-  if (RoutingWebview instanceof  RoutingWebviewProvider) {
+  if (RoutingWebview instanceof RoutingWebviewProvider) {
     RoutingWebview.refresh();
   }
 }

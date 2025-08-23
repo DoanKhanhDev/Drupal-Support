@@ -17,8 +17,8 @@ function init(context) {
  */
 async function activate(context) {
   init(context);
-  registerCommands(context);
   initRunning(context);
+  registerCommands(context);
   registerCompletion(context);
   registerWorkSpace(context);
 }
