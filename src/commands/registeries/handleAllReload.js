@@ -1,6 +1,9 @@
 const vscode = require('vscode');
 const { RoutingWebviewProvider } = require('../../webview/Routing/RoutingWebviewProvider');
 const { ServiceWebviewProvider } = require('../../webview/Service/ServiceWebviewProvider');
+const { scan } = require('../../services/scanWorkspace');
+const ServiceCompletion = require('../../completion/serviceCompletion');
+const RoutingCompletion = require('../../completion/routingCompletion');
 
 /**
  * Reloads the service tree view
@@ -27,8 +30,11 @@ async function handleAllReload(context) {
       return;
     }
 
+    await scan(context, 'all');
     await routingWebview.refresh();
     await serviceWebview.refresh();
+    await new ServiceCompletion(context).register();
+    await new RoutingCompletion(context).register();
 
     // Show message in status bar that disappears after 3 seconds
     const statusBarMessage = vscode.window.setStatusBarMessage('Reloaded successfully');

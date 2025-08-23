@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.3.0] - 2025-23-08
+
+- Fix can't detect files.
+- Update completions.
+
 ## [1.2.3] - 2025-29-03
 
 - Fix missing image in `README.md`.

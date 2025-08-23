@@ -101,10 +101,9 @@ const sortByLabel = (items) => {
  * Processes a batch of files with the given processor function
  * @param {Array} files - Array of file URIs
  * @param {Function} processor - Function to process each file
- * @param {Function} progressCallback - Function to report progress
  * @returns {Promise<Array>} Combined results from all files
  */
-const processFiles = async (files, processor, progressCallback) => {
+const processFiles = async (files, processor) => {
   const results = [];
 
   for (let i = 0; i < files.length; i++) {
@@ -115,39 +114,29 @@ const processFiles = async (files, processor, progressCallback) => {
       const processed = processor(fileContent, file.path);
       results.push(...Object.values(processed)[0]);
     }
-
-    if (progressCallback) {
-      progressCallback(i + 1);
-    }
   }
 
   return results;
 };
 
-async function scanServices(progress, token, context) {
+async function scanServices(context) {
   const serviceFiles = await vscode.workspace.findFiles('**/*.services.yml', excludePattern);
-  if (token.isCancellationRequested) return;
-
   // Process service files
   const allServices = await processFiles(
     serviceFiles,
-    processServiceFile,
-    (index) => progress.report({ message: `Processing services (${index}/${serviceFiles.length})` })
+    processServiceFile
   );
-
   // Sort results and update workspace state
   const sortedServices = sortByLabel(allServices);
   await context.workspaceState.update('services', sortedServices);
 }
 
-async function scanRouting(progress, token, context) {
+async function scanRouting(context) {
   const routingFiles = await vscode.workspace.findFiles('**/*.routing.yml', excludePattern);
-  if (token.isCancellationRequested) return;
   // Process routing files
   const allRoutingFiles = await processFiles(
     routingFiles,
     processRoutingFile,
-    (index) => progress.report({ message: `Processing routes (${index}/${routingFiles.length})` })
   );
 
   // Sort results and update workspace state
@@ -159,23 +148,21 @@ async function scanRouting(progress, token, context) {
 
 /**
  * Scans the workspace for Drupal service and routing files
- * @param {vscode.Progress} progress - VS Code progress API
- * @param {vscode.CancellationToken} token - VS Code cancellation token
  * @param {vscode.ExtensionContext} context - VS Code extension context
  * @param {string} type - Type of scan (services or routing)
  */
-async function scan(progress, token, context, type) {
+async function scan(context, type) {
   try {
     switch (type) {
       case 'services':
-        await scanServices(progress, token, context);
+        await scanServices(context);
         break;
       case 'routing':
-        await scanRouting(progress, token, context);
+        await scanRouting(context);
         break;
       default:
-        await scanServices(progress, token, context);
-        await scanRouting(progress, token, context);
+        await scanServices(context);
+        await scanRouting(context);
     }
   } catch (error) {
     vscode.window.showInformationMessage(`Error scanning Drupal workspace`);
