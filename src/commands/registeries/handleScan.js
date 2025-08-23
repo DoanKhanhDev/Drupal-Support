@@ -9,23 +9,8 @@ const { scan } = require("../../services/scanWorkspace");
  * @throws {Error} When scanning operation fails
  */
 async function handleScan(context, type = 'all') {
-  const progressOptions = {
-    location: vscode.ProgressLocation.Notification,
-    title: "Drupal Support Scanning",
-    cancellable: true
-  };
-
   try {
-    await vscode.window.withProgress(progressOptions, async (progress, token) => {
-      // Setup cancellation handler
-      token.onCancellationRequested(() => {
-        vscode.window.showInformationMessage('Scan operation cancelled');
-        return;
-      });
-
-      progress.report({ message: 'Starting scan...' });
-      await scan(progress, token, context, type);
-    });
+    await scan(context, type);
   } catch (error) {
     // Handle errors
   }
