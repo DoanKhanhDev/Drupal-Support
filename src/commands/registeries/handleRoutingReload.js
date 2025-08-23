@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const { RoutingWebviewProvider } = require('../../webview/Routing/RoutingWebviewProvider');
-const { commandMachineNames } = require('../../constants');
+const { scan } = require('../../services/scanWorkspace');
+const RoutingCompletion = require('../../completion/routingCompletion');
 
 /**
  * Reloads the service tree view
@@ -18,8 +19,9 @@ async function handleRoutingReload(context) {
       return;
     }
 
-    await vscode.commands.executeCommand(commandMachineNames.scan, 'services');
+    await scan(context, 'routing');
     await routingWebview.refresh();
+    await new RoutingCompletion(context).register();
 
     // Show message in status bar that disappears after 3 seconds
     const statusBarMessage = vscode.window.setStatusBarMessage('Routings reloaded successfully');
@@ -34,5 +36,4 @@ async function handleRoutingReload(context) {
 
 module.exports = {
   handleRoutingReload,
-
 };

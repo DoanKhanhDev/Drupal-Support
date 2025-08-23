@@ -17,9 +17,9 @@ function init(context) {
  */
 async function activate(context) {
   init(context);
+  initRunning(context);
   registerCommands(context);
   registerCompletion(context);
-  initRunning(context);
   registerWorkSpace(context);
 }
 module.exports = {

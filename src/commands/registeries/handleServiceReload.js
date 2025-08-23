@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const { ServiceWebviewProvider } = require('../../webview/Service/ServiceWebviewProvider');
-const { commandMachineNames } = require('../../constants');
+const { scan } = require('../../services/scanWorkspace');
+const ServiceCompletion = require('../../completion/serviceCompletion');
 
 /**
  * Reloads the service tree view
@@ -18,8 +19,9 @@ async function handleServiceReload(context) {
       return;
     }
 
-    await vscode.commands.executeCommand(commandMachineNames.scan, 'services');
+    await scan(context, 'services');
     await serviceWebview.refresh();
+    await new ServiceCompletion(context).register();
 
     // Show message in status bar that disappears after 3 seconds
     const statusBarMessage = vscode.window.setStatusBarMessage('Services reloaded successfully');
