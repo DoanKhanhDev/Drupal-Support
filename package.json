@@ -60,7 +60,7 @@
         {
           "id": "drupal-support-views",
           "title": "Drupal Support",
-          "icon": "./images/drupal_icon.svg",
+          "icon": "images/drupal_icon.svg",
           "tooltip": "Drupal Support"
         }
       ]
