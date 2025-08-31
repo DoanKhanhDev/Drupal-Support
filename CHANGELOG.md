@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.3.0] - 2025-31-08
+
+- Remove "\" in The string "\Drupal::".
+- Add CI/CD to deploy extension.
+
 ## [1.3.0] - 2025-23-08
 
 - Fix can't detect files.

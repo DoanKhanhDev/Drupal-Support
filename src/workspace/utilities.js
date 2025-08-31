@@ -40,6 +40,17 @@ function isSeviceYamlDocument(document) {
   return document.languageId === 'yaml' && document.fileName.endsWith('.services.yml');
 }
 
+function isDrupalFile(document) {
+  if (document instanceof vscode.Uri) {
+    return document.fsPath.endsWith('.module')
+      || document.fsPath.endsWith('.theme')
+      || document.fsPath.endsWith('.inc') || false;
+  }
+  return document.fileName.endsWith('.module')
+    || document.fileName.endsWith('.theme')
+    || document.fileName.endsWith('.inc') || false;
+}
+
 /**
  * Checks if document is YAML
  * @param {vscode.TextDocument|vscode.Uri} document
@@ -57,5 +68,6 @@ module.exports = {
   refreshServiceTree,
   refreshRoutingTree,
   isSeviceYamlDocument,
-  isRoutingYamlDocument
+  isRoutingYamlDocument,
+  isDrupalFile
 };

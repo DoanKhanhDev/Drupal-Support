@@ -1,7 +1,7 @@
 const vscode = require('vscode');
 const yml = require('js-yaml');
 const { processServiceFile, processRoutingFile } = require('../services/scanWorkspace');
-const { refreshServiceTree, refreshRoutingTree, isSeviceYamlDocument, isRoutingYamlDocument } = require('../workspace/utilities');
+const { refreshServiceTree, refreshRoutingTree, isSeviceYamlDocument, isRoutingYamlDocument, isDrupalFile } = require('../workspace/utilities');
 
 /**
  * Watches for YAML file saves and refreshes the appropriate trees
@@ -22,7 +22,24 @@ function handleDocumentSave(context, document) {
     updateStateAndRefreshTree(context, document, 'services', processServiceFile, refreshServiceTree);
   } else if (isRoutingYamlDocument(document)) {
     updateStateAndRefreshTree(context, document, 'routing', processRoutingFile, refreshRoutingTree);
+  } else if (isDrupalFile(document)) {
+    removeSlashDrupal(document);
   }
+}
+
+/**
+ * Removes the '\Drupal' part from the file path.
+ * @param {vscode.TextDocument} document
+ */
+function removeSlashDrupal(document) {
+  const edit = new vscode.WorkspaceEdit();
+  const text = document.getText();
+  const wholeRange = new vscode.Range(
+    document.positionAt(0),
+    document.positionAt(text.length)
+  );
+  edit.replace(document.uri, wholeRange, text.replace(/\\Drupal::/g, 'Drupal::'));
+  vscode.workspace.applyEdit(edit);
 }
 
 /**
