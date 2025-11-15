@@ -89,7 +89,7 @@ class ServiceCompletion {
       '@'
     );
 
-    this.context.subscriptions['yamlServiceCompletionProvider'] = yamlCompletionProvider;
+    this.context.subscriptions['yamlRoutingCompletionProvider'] = yamlCompletionProvider;
   }
 }
 
