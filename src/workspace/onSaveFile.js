@@ -1,5 +1,5 @@
 const vscode = require('vscode');
-const yml = require('js-yaml');
+const yaml = require('js-yaml');
 const { processServiceFile, processRoutingFile } = require('../services/scanWorkspace');
 const { refreshServiceTree, refreshRoutingTree, isSeviceYamlDocument, isRoutingYamlDocument, isDrupalFile } = require('../workspace/utilities');
 
@@ -56,27 +56,31 @@ function updateStateAndRefreshTree(context, document, stateKey, processFunction,
   const updatedItems = originalItems.filter(item => item.file !== document.uri.fsPath);
 
   // Load and process the YAML file
-  const fileContent = yml.load(document.getText());
-  const processResult = processFunction(fileContent, document.uri.fsPath);
+  try {
+    const fileContent = yaml.load(document.getText());
+    const processResult = processFunction(fileContent, document.uri.fsPath);
 
-  // Extract the items from the process result
-  // For services, the key is 'services', for routing, it's 'routings'
-  const newItems = processResult[stateKey === 'routing' ? 'routing' : 'services'];
+    // Extract the items from the process result
+    // For services, the key is 'services', for routing, it's 'routings'
+    const newItems = processResult[stateKey === 'routing' ? 'routing' : 'services'];
 
-  // Add the new items to the updated list
-  updatedItems.push(...newItems);
+    // Add the new items to the updated list
+    updatedItems.push(...newItems);
 
-  // Sort the items alphabetically by label
-  const sortedItems = [...updatedItems].sort((a, b) => {
-    if (typeof a.label === 'string' && typeof b.label === 'string') {
-      return a.label.localeCompare(b.label);
-    }
-    return 0;
-  });
+    // Sort the items alphabetically by label
+    const sortedItems = [...updatedItems].sort((a, b) => {
+      if (typeof a.label === 'string' && typeof b.label === 'string') {
+        return a.label.localeCompare(b.label);
+      }
+      return 0;
+    });
 
-  // Update the state and refresh the tree
-  context.workspaceState.update(stateKey, sortedItems);
-  refreshFunction(context);
+    // Update the state and refresh the tree
+    context.workspaceState.update(stateKey, sortedItems);
+    refreshFunction(context);
+  } catch (e) {
+
+  }
 }
 
 module.exports = {
