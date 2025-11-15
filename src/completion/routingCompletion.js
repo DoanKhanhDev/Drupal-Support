@@ -13,7 +13,7 @@ class RoutingCompletion {
     const routingCompletionItems = this.createRoutingCompletionItems(routings);
 
     // Dispose existing completion providers if they exist
-    ['phpRoutingCompletionProvider', 'yamlRoutingCompletionProvider'].forEach((provider) => {
+    ['phpRoutingCompletionProvider', 'twigRoutingCompletionProvider'].forEach((provider) => {
       if (this.context.subscriptions[provider]) {
       this.context.subscriptions[provider].dispose();
       }
@@ -68,7 +68,7 @@ class RoutingCompletion {
     const twigPrefixes = [
       'path(',
     ];
-    const yamlCompletionProvider = vscode.languages.registerCompletionItemProvider(
+    const twigCompletionProvider = vscode.languages.registerCompletionItemProvider(
       {
         language: 'twig',
         scheme: 'file',
@@ -91,7 +91,7 @@ class RoutingCompletion {
       "'"
     );
 
-    this.context.subscriptions['yamlRoutingCompletionProvider'] = yamlCompletionProvider;
+    this.context.subscriptions['twigRoutingCompletionProvider'] = twigCompletionProvider;
   }
 }
 
