@@ -98,4 +98,45 @@ suite('Drupal Support Extension Test Suite', () => {
     assert.strictEqual(initRunningStub.called, false);
     assert.strictEqual(registerWorkSpaceStub.called, false);
   });
+
+  test('Extension should handle empty workspace folders array', async () => {
+    // Mock workspace folders to be an empty array
+    sandbox.stub(vscode.workspace, 'workspaceFolders').value([]);
+
+    // Create context with workspaceState
+    const context = {
+      workspaceState: {
+        update: sandbox.stub().resolves()
+      }
+    };
+
+    // Create stubs for the required modules
+    const registerCommandsStub = sandbox.stub();
+    const initRunningStub = sandbox.stub();
+    const registerWorkSpaceStub = sandbox.stub();
+    const registerCompletionStub = sandbox.stub();
+
+    // Create extension with stubs
+    const extensionWithStubs = proxyquire('../extension', {
+      './src/commands/registerCommands': { registerCommands: registerCommandsStub },
+      './src/services/initRunning': { initRunning: initRunningStub },
+      './src/workspace/registerWorkSpace': { registerWorkSpace: registerWorkSpaceStub },
+      './src/completion/registerCompletion': { registerCompletion: registerCompletionStub }
+    });
+
+    // This should throw an error because workspaceFolders[0] would be undefined
+    try {
+      await extensionWithStubs.activate(context);
+      assert.fail('Should have thrown an error');
+    } catch (error) {
+      // Expected error because workspaceFolders[0] would be undefined
+      assert.ok(error instanceof TypeError);
+    }
+
+    // Verify that none of the functions were called
+    assert.strictEqual(registerCommandsStub.called, false);
+    assert.strictEqual(registerCompletionStub.called, false);
+    assert.strictEqual(initRunningStub.called, false);
+    assert.strictEqual(registerWorkSpaceStub.called, false);
+  });
 });
